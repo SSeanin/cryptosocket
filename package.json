@@ -1,0 +1,17 @@
+{
+  "name": "cryptosocket",
+  "version": "0.0.0",
+  "description": "Test socket project for ChartBox",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Saeed Andalib <saeedandalib5@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.1",
+    "socket.io": "^4.5.1",
+    "socket.io-client": "^4.5.1"
+  }
+}
