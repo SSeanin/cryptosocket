@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CryptoSocket</title>
+
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .main {
+            height: 275px;
+            width: 250px;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 5px;
+            box-shadow: 3px 10px 10px rgba(0, 0, 0, .3);
+        }
+
+        .list {
+            list-style: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .list li {
+            margin: 0 auto;
+            display: block;
+        }
+
+        .list li:not(:last-child) {
+            border-bottom: 1px solid rgba(0, 0, 0, .1);
+            margin-bottom: 15px;
+        }
+
+        .list span {
+            margin: 0 auto;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<main class="main">
+    <ul class="list">
+        <li class="xbtusd">
+            <span class="label">XBT/USD</span>
+            <span class="value">Waiting on tick</span>
+        </li>
+        <li class="xbteur">
+            <span class="label">XBT/EUR</span>
+            <span class="value">Waiting on tick</span>
+        </li>
+        <li class="adausd">
+            <span class="label">ADA/USD</span>
+            <span class="value">Waiting on tick</span>
+        </li>
+    </ul>
+</main>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const updatePrice = (element, price) => {
+    element.lastElementChild.innerText = price
+  }
+
+  const socket = io({
+    auth: {
+      token: 'abcd'
+    }
+  });
+
+  socket.on('connect_error', (err) => {
+    console.log(err.message)
+  })
+
+  socket.on('newAsk', (ask) => {
+    console.log(ask)
+    switch (ask[3]) {
+      case 'XBT/USD':
+        updatePrice(document.querySelector('.xbtusd'), ask[1].a[0])
+        break;
+
+      case 'XBT/EUR':
+        updatePrice(document.querySelector('.xbteur'), ask[1].a[0])
+        break;
+
+      case 'ADA/USD':
+        updatePrice(document.querySelector('.adausd'), ask[1].a[0])
+        break;
+    }
+  });
+</script>
+</body>
+</html>
