@@ -1,20 +1,21 @@
 const express = require('express');
 const socket = require('socket.io');
-const {io} = require('socket.io-client');
+const WebSocket = require('ws');
 
-const app = express();
-
-let krakenSocket = io('wss://ws.kraken.com');
-
-krakenSocket.on('connect_error', (err) => {
-  console.log(`connect_error due to ${err}`);
-});
-
-krakenSocket.onAny((eventName, ...args) => {
-  console.log(eventName);
-});
-
+// Constants
 const PORT = 3000;
+
+// Init
+const app = express();
+const krakenSocket = new WebSocket('wss://ws.kraken.com');
+
+krakenSocket.on('open', () => {
+  krakenSocket.send('{"event":"subscribe","pair":["XBT/USD","XBT/EUR","ADA/USD"],"subscription":{"name":"ticker"}}')
+
+  krakenSocket.on('message', (data) => {
+    console.log(JSON.parse(data.toString()))
+  })
+})
 
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`)
